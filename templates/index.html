@@ -2,9 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hola World</title>
+    <title>Problemas Piel</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Hola World</h1>
+    <h1>DETECCIÓN DE PROBLEMAS DE PIEL</h1>
+    <form id="uploadForm" method="post" enctype="multipart/form-data">
+        <label for="photo">Sube una fotografía:</label>
+        <input type="file" id="photo" name="photo" accept="image/*">
+        <button type="submit">Subir</button>
+    </form>
+    <div id="preview" style="display:none;">
+        <img id="previewImg" src="#" alt="Vista previa de la foto" />
+        <p id="fileName"></p>
+        <button class ="remove" type="button" id="removeBtn">Eliminar</button>
+    </div>
+    <script>
+    const form = document.getElementById('uploadForm');
+    const photoInput = document.getElementById('photo');
+    const previewDiv = document.getElementById('preview');
+    const previewImg = document.getElementById('previewImg');
+    const fileName = document.getElementById('fileName');
+    const removeBtn = document.getElementById('removeBtn');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const file = photoInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                previewDiv.style.display = 'flex';
+                fileName.textContent = file.name;
+            }
+            reader.readAsDataURL(file);
+
+            const formData = new FormData(form);
+            fetch('/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('No hay respuesta');
+                }
+                return response.text();
+            })
+            .then(data => {
+                console.log('Respuesta del servidor:', data);
+                if (data.includes('success')) {
+                    console.log('Se ha subido bien (frontend esto)');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    });
+
+    removeBtn.addEventListener('click', function() {
+        previewDiv.style.display = 'none';
+        previewImg.src = '#';
+        fileName.textContent = '';
+        photoInput.value = '';
+    });
+    </script>
 </body>
 </html>
