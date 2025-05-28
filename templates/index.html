@@ -6,6 +6,13 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+   <nav class="navbar">
+    <ul class="nav-links">
+        <li><a href="/" class="nav-link {{ 'active' if current_page == 'principal' else '' }}">Principal</a></li>
+        <li><a href="/show-sample-images" class="nav-link {{ 'active' if current_page == 'ejemplos' else '' }}">Ejemplos</a></li>
+        <li><a href="/ver-galeria" class="nav-link {{ 'active' if current_page == 'aleatorio' else '' }}">Aleatorio</a></li>
+    </ul>
+</nav>
     <h1>DETECCIÓN DE PROBLEMAS DE PIEL</h1>
     <form id="uploadForm" method="post" enctype="multipart/form-data">
         <label for="photo">Sube una fotografía:</label>
